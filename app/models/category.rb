@@ -1,9 +1,9 @@
 class Category < ApplicationRecord
-    belongs_to :user, foreign_key: 'user_id'
-    has_many :transactions, dependent: :destroy, foreign_key: 'tr_id'
+    belongs_to :users, class_name: 'User', foreign_key: 'users_id'
+    has_many :transactions, dependent: :destroy
 
     validates :name, presence: true, length: { maximum: 200 }
-    has_one_attached :icon
+    has_one_attached :icon, dependent: :destroy
 
   def total_amount
     transactions.sum(:amount)
