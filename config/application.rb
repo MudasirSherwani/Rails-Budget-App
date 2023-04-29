@@ -1,4 +1,5 @@
 require_relative "boot"
+require 'dotenv/load'
 
 require "rails/all"
 
@@ -6,7 +7,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module RailsBudgetApp
+module BudgetApp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
@@ -18,8 +19,5 @@ module RailsBudgetApp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
-
-    config.active_storage.service = :local
-
   end
 end
