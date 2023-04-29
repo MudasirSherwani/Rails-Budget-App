@@ -1,0 +1,26 @@
+<%= render partial: 'shared/navbar', locals: { page_heading: "TRANSACTIONS" } %>
+
+<% @transaxtions = @transaxtions.sort_by { |operation| operation.created_at }.reverse %>
+
+<div class="text op-center">
+  <span>Total:</span>
+  <span>$<%= @total_amount %></span>
+</div>
+<section class="section">
+    <% @transaxtions.each do |operation| %>
+      <div class="op-div">
+        <div class="icon">
+          <%= @category.icon %>
+        </div>
+        <div>
+          <p class="name text"><%= operation.name %></p>
+          <p class="date"><%= operation.created_at.strftime('%B %d, %Y %H:%M') %></p>
+        </div>
+        <p class="amount"><%= number_to_currency(operation.amount) %></p>
+      </div>
+    <% end %>
+</section>
+
+<div class="op-btn-container">
+  <%= link_to 'New Transaction', new_operation_path(category_id: @category&.id), class: "op-btn" %>
+</div>

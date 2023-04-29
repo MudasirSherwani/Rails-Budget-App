@@ -1,0 +1,17 @@
+<%= render partial: 'shared/navbar', locals: { page_heading: "NEW CATEGORY" } %>
+
+<%= form_with(model: @category, local: true, html: { class: "" }) do |form| %>
+  <div class="divider"></div>
+  <%= form.text_field :name, placeholder: "Name", class: "input" %>
+  <div class="divider"></div>
+  <%= form.label :icon, class:"label" %><span>: </span><br>
+  <%= form.collection_select :icon, icons_list, :itself, :itself, {}, {class: 'drop-down'} %>
+  <%= form.hidden_field :user_id, value: current_user.id %>
+
+  <div class="op-btn-container helper">
+    <div class="op-btn">
+      <%= form.submit 'Save', class: "none" %>
+    </div>
+  </div>
+<% end %>
+
