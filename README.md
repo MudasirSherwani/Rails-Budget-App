@@ -74,7 +74,7 @@
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 
-- [Live demo link](https://.onrender.com/)
+- [Live demo link](https://sherwani-budget-app.onrender.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -82,7 +82,7 @@
 
 ## 💻 Video Demo <a name="live-demo"></a>
 
-- [Video demo link](https://www.loom.com/share/)
+- [Video demo link](https://www.loom.com/share/ad88ab29db664f98ae0c5f6e1e4709cb)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
