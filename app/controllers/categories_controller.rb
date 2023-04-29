@@ -1,68 +1,56 @@
 class CategoriesController < ApplicationController
-    # before_action :authenticate_user!
-    # load_and_authorize_resource
-    before_action :set_user, only: %i[index new create destroy]
-    before_action :set_category, only: %i[show edit update destroy]
+  before_action :redirect_unauthenticated_user_to_custom_page
 
   def index
-    @categories = Category.includes(:users).order(created_at: :desc).with_attached_icon
+    @categories = current_user.categories.includes(:operations)
+    @operations_by_category = {}
+    @categories.each do |cat|
+      operations = Operation.where(category_id: cat.id)
+      @operations_by_category[cat.id] = operations
+    end
+
+    @total_amount_by_category = {}
+    @categories.each do |cat|
+      operations = @operations_by_category[cat.id]
+      @total_amount_by_category[cat.name] = operations.sum(:amount)
+    end
+    @page_name = 'Categories'
   end
 
   def show
-    @categories = Category.includes(:users).find(params['id'])
-    redirect_to category_transactions_path(@category)
+    @category = Category.includes(:operations).find(params[:id])
+    @operations = @category.operations
+    @total_amount = @operations.sum(:amount)
+    @page_name = 'Categories'
   end
 
   def new
-    @category = Category.new(users: current_user)
+    @category = Category.new
+    @page_name = 'Add New Category'
   end
 
-  def edit; end
-
   def create
-    @users = User.find(current_user.id)
-    @category = @users.categories.new(category_params)
-    @category.icon.attach(params[:category][:icon])
+    @category = current_user.categories.build(category_params)
 
-    if @category.save
-      redirect_to user_categories_path(current_user), notice: 'Category was successfully created.'
+    if Category.exists?(name: @category.name, user_id: current_user.id)
+      flash[:notice] = 'The Category you entered is already exists'
+      render :new
+    elsif @category.save
+      redirect_to categories_path, notice: 'Category successfully created.'
     else
       render :new
     end
   end
 
-  def update
-    respond_to do |format|
-      if @category.update(category_params)
-        format.html { redirect_to category_url(@category), notice: 'Category was successfully updated.' }
-        
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def destroy
-    puts plain: params
-    @category = Category.find(params[:id])
-    @category.destroy
-
-    flash[:notice] = 'Category was successfully deleted'
-    redirect_to root_path
-  end
-
   private
 
-  def set_category
-    @category = Category.includes(:users).find(params[:id])
-  end
-
-def set_user
-    @user = current_user
-  end
-
   def category_params
-    params.require(:category).permit(:name, :icon, :users_id)
+    params.require(:category).permit(:name, :icon, :user_id)
   end
-  
+
+  def redirect_unauthenticated_user_to_custom_page
+    return if user_signed_in?
+
+    redirect_to '/users/'
+  end
 end
