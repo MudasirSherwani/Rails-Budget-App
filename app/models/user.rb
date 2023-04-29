@@ -3,8 +3,11 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-    has_many :categories, foreign_key: 'users_id'
-    has_many :transactions, foreign_key: 'users_id'
 
-    validates :name, presence: true, length: { maximum: 50 }
+  has_many :authored_operations, class_name: 'Operation', foreign_key: 'author_id'
+
+  has_many :categories
+  has_many :operations
+
+  validates :name, :email, :password, presence: true, length: { minimum: 3, maximum: 50 }
 end

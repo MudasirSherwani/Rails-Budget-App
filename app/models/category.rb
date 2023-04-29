@@ -1,11 +1,17 @@
 class Category < ApplicationRecord
-    belongs_to :users, class_name: 'User', foreign_key: 'users_id'
-    has_many :transactions, dependent: :destroy
+  belongs_to :user
+  has_many :categorizations, dependent: :destroy
+  has_many :operations, through: :categorizations
 
-    validates :name, presence: true, length: { maximum: 200 }
-    has_one_attached :icon, dependent: :destroy
+  validates :user_id, presence: true
+  validates :name, presence: true, uniqueness: { scope: :user_id }, length: { minimum: 3, maximum: 30 }
+  validates :icon, presence: true
+
+  def slug
+    name.parameterize
+  end
 
   def total_amount
-    transactions.sum(:amount)
+    operations.sum(:amount)
   end
 end
